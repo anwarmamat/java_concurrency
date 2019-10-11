@@ -17,7 +17,6 @@ public class NoVisibilityTest {
 	/**
 	 * Thread class that reads ready, then asserts that number has the value 42.
 	 * 
-	 * @author Rance Cleaveland
 	 *
 	 */
 	private static class ReaderThread extends Thread {
