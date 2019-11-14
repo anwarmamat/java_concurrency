@@ -1,0 +1,39 @@
+HOW TO RUN OCAML FILES IN THIS DIRECTORY
+
+1.  Start ocaml by executing "ocaml".  Running this in "powershell" is easiest.
+2.  To get current working directory from inside ocaml:  Sys.getcwd();;
+3.  Change current working directory to this directory by executing "#cd <dir>" at
+    top level (must include "#" in typing!)
+4.  Equivalent of "ls":  Sys.readdir ".";;
+5.  To load file in this directory:  type "#use <file_name_as_string>"
+6.  You can also change into this directory, then invoke ocaml.  This avoids steps 2-4.
+
+
+
+In OCaml:
+
+
+# let t1 = fnameToString "textInput/alice.txt";;
+val t1 : string = "\nalice\nbob\nalice\ncat\nbob\nalice\ndavid\nalice\nbob"
+# let t2 = stringToWordList t1;;
+val t2 : string list =
+  ["alice"; "bob"; "alice"; "cat"; "bob"; "alice"; "david"; "alice"; "bob"]
+# let t3 = List.map (fun w->(w,1)) t2;;
+val t3 : (string * int) list =
+  [("alice", 1); ("bob", 1); ("alice", 1); ("cat", 1); ("bob", 1);
+   ("alice", 1); ("david", 1); ("alice", 1); ("bob", 1)]
+# List.fold_left insert [] t3;;
+- : (string * int list) list =
+[("alice", [1; 1; 1; 1]); ("bob", [1; 1; 1]); ("cat", [1]); ("david", [1])]
+# let t4 = List.fold_left insert [] t3;;
+val t4 : (string * int list) list =
+  [("alice", [1; 1; 1; 1]); ("bob", [1; 1; 1]); ("cat", [1]); ("david", [1])]
+# let t5 = List.map wcReduceFun t4;;
+val t5 : (string * int) list list =
+  [[("alice", 4)]; [("bob", 3)]; [("cat", 1)]; [("david", 1)]]
+# 
+
+
+
+
+
