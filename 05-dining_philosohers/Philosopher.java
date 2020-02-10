@@ -18,6 +18,12 @@ public class Philosopher implements Runnable {
     public void run() {
         try {
             while (true) {
+		/*try {
+		    Thread.sleep((int)(Math.random() * 10));
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+		    }*/
+		
                 // thinking
                 doAction(    //System.nanoTime() +
 			 ": Thinking");
