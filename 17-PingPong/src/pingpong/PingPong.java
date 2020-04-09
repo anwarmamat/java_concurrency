@@ -1,4 +1,4 @@
-package akkaStarterExamples;
+package pingpong;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
