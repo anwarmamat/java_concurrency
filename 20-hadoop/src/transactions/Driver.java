@@ -1,5 +1,7 @@
 package transactions;
 
+import java.io.IOException;
+import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -7,19 +9,19 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.mapreduce.Job;
 
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
 
 public class Driver {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 		
 		Configuration conf = new Configuration();
 		Job job_conf = new Job(conf);
-		//job.setJobName("WordCount");
+		job_conf.setJobName("Sales");
 		
-		
-		//JobClient my_client = new JobClient();
-		// Create a configuration object for the job
-		//JobConf job_conf = new JobConf(SalesCountryDriver.class);
-
+	
 		// Set a name of the Job
 		job_conf.setJobName("SalePerCountry");
 
@@ -32,22 +34,27 @@ public class Driver {
 		job_conf.setReducerClass(SalesCountryReducer.class);
 
 		// Specify formats of the data type of Input and output
-		job_conf.setInputFormat(TextInputFormat.class);
-		job_conf.setOutputFormat(TextOutputFormat.class);
+		job_conf.setInputFormatClass(TextInputFormat.class);
+		job_conf.setOutputFormatClass(TextOutputFormat.class);
 
 		// Set input and output directories using command line arguments, 
 		//arg[0] = name of input directory on HDFS, and arg[1] =  name of output directory to be created to store the output file.
 		
-		FileInputFormat.setInputPaths(job_conf, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job_conf, new Path(args[1]));
-
-		my_client.setConf(job_conf);
-		try {
-			// Run the job 
-			JobClient.runJob(job_conf);
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		TextInputFormat.setInputPaths(job_conf, new Path("inputs"));
+		TextOutputFormat.setOutputPath(job_conf, new Path("outputs"));
+		
+		Date startTime = new Date();
+		System.out.println("Job started: " + startTime);
+		boolean success = job_conf.waitForCompletion(true);
+		if (success) {
+			Date endTime = new Date();
+			System.out.println("Job ended: " + endTime);
+			System.out.println("The job took " + (endTime.getTime() - startTime.getTime()) / 1000 + " seconds.");
+		} else {
+			System.out.println("Job failed.");
 		}
+		
 	}
 }
 
