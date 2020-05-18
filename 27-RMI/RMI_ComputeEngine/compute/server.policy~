@@ -1,0 +1,4 @@
+grant codeBase "file:/Users/anwar/Desktop/RMI_ComputeEngine/compute/" {
+    permission java.security.AllPermission;
+};
+
