@@ -1,7 +1,7 @@
 package threadsafety;
 /**
  *  When new Runnables are created for each thread, then 
- *  instance variables of the Runable are not hared, but the 
+ *  instance variables of the Runnable are not shared, but the 
  *  static variables are still shared.
  *
  */
@@ -19,14 +19,15 @@ public class MultipleRunnable {
 			t1.join();
 			t2.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Count = " + r1.getCount());
-		System.out.println("Count = " + r2.getCount());
+		//each Runnable incredemnted its own instance of count
+		System.out.println("Count = " + r1.getCount());	// 1
+		System.out.println("Count = " + r2.getCount());	// 1
 		
-		System.out.println("Copies = " + r1.getCopies());
-		System.out.println("Copies = " + r2.getCopies());
+		//all Runnables incremented the static variable Copies
+		System.out.println("Copies = " + r1.getCopies());	// 2
+		System.out.println("Copies = " + r2.getCopies());	// 2
 	}
 
 }
