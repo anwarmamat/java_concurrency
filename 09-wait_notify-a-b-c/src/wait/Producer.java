@@ -9,11 +9,10 @@ public class Producer extends Thread {
 	}
 	@Override
 	public void run() {
-		System.out.println("Thread " + Thread.currentThread().getName() + " started");
+		System.out.println(Thread.currentThread().getName() + " started");
 		try {
-			sleep(100);
+			sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		put();
@@ -27,11 +26,11 @@ public class Producer extends Thread {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Thread " + Thread.currentThread().getName() +" will notify");	
+			System.out.println(Thread.currentThread().getName() +" will notify");	
 			buffer.full = true;
 			buffer.empty = false;
-			buffer.notifyAll();
-			System.out.println("Thread " + Thread.currentThread().getName() + " notified others");	
+			buffer.notify();
+			System.out.println(Thread.currentThread().getName() + " notified others");	
 		}
 	}
 }

@@ -10,28 +10,30 @@
 package wait;
 
 public class WaitNotify {
-	public static void main(String[] args) {
-		Buffer c = new Buffer();
-		Thread a1 = new Consumer("Consumer 1",c);
-		Thread a2 = new Consumer("Consumer 2",c);
+	public static void main(String[] args) throws InterruptedException {
+		Buffer buffer = new Buffer();
+		Thread c1 = new Consumer("Consumer 1",buffer);
+		Thread c2 = new Consumer("Consumer 2",buffer);
 		
-		Thread b1 = new Producer("Producer",c);
+		Thread p1 = new Producer("Producer",buffer);
 			
-		a1.start();
-		a2.start();
-		b1.start();
+		c1.start();
+		c2.start();
+		Thread.sleep(2000); //delay the producer
+		//at this point, both consumers are waiting for the producer.
+		p1.start();
 		
 		try {
-			a1.join();
-			a2.join();
-			b1.join();
+			c1.join();
+			c2.join();
+			p1.join();
 		}catch(Exception e) {
 			System.err.println("Errro");
 		}
 		
-		System.out.println("A1 State:" + a1.getState());
-		System.out.println("A2 State:" + a2.getState());
-		System.out.println("B1 State:" + b1.getState());
+		System.out.println("A1 State:" + c1.getState());
+		System.out.println("A2 State:" + c2.getState());
+		System.out.println("B1 State:" + p1.getState());
 		System.out.println("Main Done");
 	}
 }

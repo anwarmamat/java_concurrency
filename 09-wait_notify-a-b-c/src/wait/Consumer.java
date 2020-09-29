@@ -19,7 +19,7 @@ public class Consumer extends Thread {
 	}
 	@Override
 	public void run() {
-		System.out.println("Thread " + Thread.currentThread().getName() +" started");	
+		System.out.println(Thread.currentThread().getName() +" started");	
 		try {
 			take();
 		} catch (Exception e) {
@@ -27,16 +27,24 @@ public class Consumer extends Thread {
 		}
 	}
 	private void take() throws Exception {
+		System.out.println(Thread.currentThread().getName() +" want to consume");
 		synchronized(buffer){
-			    long allowedDuration = 11000;
-
+				System.out.println(Thread.currentThread().getName() +" acquired the lock.");	
+			    long allowedDuration = 10000;
 			    long startTime = System.currentTimeMillis();
 			    long timeLeft = allowedDuration;
-
-				System.out.println("Thread " + Thread.currentThread().getName() +" will wait");	
+			    
 				while(buffer.empty) {
 					try {
-						buffer.wait(5000);
+						System.out.println(Thread.currentThread().getName() +" will wait");	
+						System.out.println(Thread.currentThread().getName() +" released the lock");	
+						sleep(1000);
+						buffer.wait(1000);
+						//---->
+						//when the consumer wakes up, it continues from here
+						
+						System.out.println(Thread.currentThread().getName() +" woke up");	
+						
 						if (!buffer.empty) {
 						      break; 
 						}else {
@@ -45,19 +53,17 @@ public class Consumer extends Thread {
 							timeLeft = allowedDuration - elapsed;
 							if (timeLeft <= 0) throw new Exception ("Timeout");
 						}
-
-						
 						
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					System.out.println("Thread " + Thread.currentThread().getName() +" is checking the condition");	
+					System.out.println(Thread.currentThread().getName() +" is checking the condition");	
 				}
-				System.out.println("Thread " + Thread.currentThread().getName() + " resumed");	
+				System.out.println(Thread.currentThread().getName() + " resumed");	
 				buffer.full = false;
 				buffer.empty = true;
-				System.out.println("Thread " + Thread.currentThread().getName() +" done");	
-			
+				System.out.println(Thread.currentThread().getName() +" done");	
+				buffer.notify();//notify the other consumer
 		}
 	}
 }
