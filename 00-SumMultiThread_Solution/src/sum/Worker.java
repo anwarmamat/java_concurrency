@@ -21,10 +21,7 @@ public class Worker extends Thread{
 	public void run(){
 		//System.out.println(lo +"\t" + hi);
 		for(int i=lo; i < hi; i++){
-			double a =  (arr[i] + 0.5);
-			double b = 1.0 / a;
-			double c = Math.sqrt(b);
-			answer += c;
+			answer += Process.apply(arr[i]);
 		}
 	}
 	

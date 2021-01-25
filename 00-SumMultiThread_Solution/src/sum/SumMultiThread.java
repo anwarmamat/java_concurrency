@@ -48,10 +48,7 @@ public class SumMultiThread {
 
         // Compute sum of reciprocals of array elements
         for (int i = 0; i < input.length; i++) {
-        		double a =  (input[i] + 0.5);
-        		double b = 1.0 / a;
-        		double c = Math.sqrt(b);
-            sum += c;
+            sum += Process.apply(input[i]);
         }
         return sum;
     }
