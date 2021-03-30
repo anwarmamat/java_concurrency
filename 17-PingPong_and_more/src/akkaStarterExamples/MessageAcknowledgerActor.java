@@ -1,18 +1,20 @@
 package akkaStarterExamples;
 
+import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
-import akka.actor.UntypedActor;
 
-public class MessageAcknowledgerActor extends UntypedActor {
-
+public class MessageAcknowledgerActor extends AbstractActor {
 	@Override
-	public void onReceive(Object msg) throws Exception {
-		if (msg instanceof String) {
-			ActorRef sender = getSender();
-			String payload = (String)msg;
-			System.out.printf("Message is:  %s%n", payload);
-			sender.tell(payload + " message received", getSelf());
-		}
+	public Receive createReceive() {
+		return receiveBuilder()
+				.match(String.class, this::onString)
+				.build();
+	}
+
+	public void onString(String msg) {
+		ActorRef sender = getSender();
+		System.out.printf("Message is:  %s%n", msg);
+		sender.tell(msg + " message received", getSelf());
 	}
 
 }

@@ -8,19 +8,17 @@ import scala.concurrent.duration.Duration;
 import static akka.actor.SupervisorStrategy.*;
 
 public class Supervisor extends AbstractLoggingActor {
-
   public static final OneForOneStrategy STRATEGY = new OneForOneStrategy(
     10,
     Duration.create("10 seconds"),
     DeciderBuilder
-      .match(RuntimeException.class, ex -> escalate())
+      .match(RuntimeException.class, ex->restart())// ex -> escalate())
       .build()
   );
 
 
   {
     final ActorRef child = getContext().actorOf(NonTrustWorthyChild.props(), "child");
-
     receive(ReceiveBuilder
       .matchAny(any -> child.forward(any, getContext()))
       .build()

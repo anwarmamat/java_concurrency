@@ -1,8 +1,5 @@
 package counter;
 
-
-
-import akka.Message;
 import akka.actor.*;
 import akka.actor.AbstractActor.Receive;
 import akka.japi.pf.ReceiveBuilder;
@@ -12,13 +9,9 @@ import akka.japi.pf.ReceiveBuilder;
  * counter - actor that keeps state
  */
 public class App {
-	
-	
   static class Counter extends AbstractLoggingActor {
     // protocol
     static class Message { }
-
-
     private int counter = 0;
 
     @Override

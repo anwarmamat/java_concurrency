@@ -1,6 +1,4 @@
 package supervise;
-
-
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.DeathPactException;
@@ -14,37 +12,34 @@ import akka.japi.pf.DeciderBuilder;
 import akka.japi.pf.ReceiveBuilder;
 import scala.concurrent.duration.Duration;
 
-
 public class ActorA extends AbstractLoggingActor{
 	ActorRef child1;
 	ActorRef child2;
-	
-	
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
 				.match(Message.class, this::onMessage)
-				.match(Terminated.class, this::onTerminate)
+				.match(Terminated.class, this::onTerminate)//when the child terminated
 				.build();
 	}
-	
 	
 	public static final OneForOneStrategy STRATEGY = new OneForOneStrategy( // each child is treated separately
             10, // max 10 restart per 10 seconds
             Duration.create("10 seconds"),
             DeciderBuilder            		
                     .match(IllegalArgumentException.class, e -> SupervisorStrategy.resume())
-                    .match(ArithmeticException.class, e -> SupervisorStrategy.restart())
-                    //.match(ArithmeticException.class, e -> SupervisorStrategy.stop())
+                    //.match(ArithmeticException.class, e -> SupervisorStrategy.restart())
+                    //.match(NullPointerException.class, e -> SupervisorStrategy.restart())
+                    .match(ArithmeticException.class, e -> SupervisorStrategy.stop())
                     /*
-                     * //.match(RuntimeException.class, ex -> SupervisorStrategy.resume())
-	            		// .match(RuntimeException.class, ex -> SupervisorStrategy.stop())
+                      .match(RuntimeException.class, ex -> SupervisorStrategy.resume())
+	            		.match(RuntimeException.class, ex -> SupervisorStrategy.stop())
 	                    .match(ArithmeticException.class, e -> SupervisorStrategy.resume())
 	                    .match(NullPointerException.class, e -> SupervisorStrategy.restart())
 	                    .match(IllegalArgumentException.class, e -> SupervisorStrategy.stop())
 	                    .match(RuntimeException.class, ex -> SupervisorStrategy.restart())
 	                    .match(DeathPactException.class, ex ->SupervisorStrategy.resume())
-	                    //.matchAny(o -> SupervisorStrategy.escalate())
+	                    .matchAny(o -> SupervisorStrategy.escalate())
 	                    .matchAny(o -> SupervisorStrategy.restart())
                      */
                     .build()
@@ -55,9 +50,8 @@ public class ActorA extends AbstractLoggingActor{
         return STRATEGY;
     }
 	
-	
 	public void onTerminate(Terminated msg) {	
-		log().info("child is dead.");
+		log().info("Child " + msg.actor().path().name() + " is dead.");
 		return;
 	}
 	
@@ -81,10 +75,7 @@ public class ActorA extends AbstractLoggingActor{
 			child2.tell(new Message("go"), self());
 			
 			child1.tell(PoisonPill.getInstance(), self());
-			
-			
 			child2.tell(new Message("fail"), self());
-			
 			
 			Thread.sleep(1000);
 			/**
@@ -103,7 +94,4 @@ public class ActorA extends AbstractLoggingActor{
     public void postStop() throws Exception {
         log().info("Stopping Actor A...");
     }
-
-
-	
 }
