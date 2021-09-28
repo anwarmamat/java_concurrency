@@ -1,6 +1,8 @@
 **/.DS_Store
+*/.DS_Store
 **/a.out
 **/.metadata
 .DS_Store
+**/.merlin
+**/_build/
 *~
-*.class
