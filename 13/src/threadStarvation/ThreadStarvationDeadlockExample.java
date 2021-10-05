@@ -6,33 +6,47 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Simple example illustrating thread-starvation deadlock.
- * If nThreads is 1, there is a deadlock.
- * If nThreads is > 1, there is no deadlock.
+ * An example illustrating thread-starvation deadlock.
+ * Task 2 submits Task 1, and Task 1 submits Task 0.
+
+ * If nThreads is 2, there is a deadlock.
+ * If nThreads is > 2, there is no deadlock.
  * 
- *
  */
 public class ThreadStarvationDeadlockExample {
 
 	public static void main(String[] args) {
-		final int nThreads = 1;
+		final int nThreads = 3;
 		final ExecutorService exec = Executors.newFixedThreadPool(nThreads);
+		
+		final Callable<String> task0 = new Callable<String>() {
+			public String call() {
+				System.out.println("t0 is submitted.");
+				return "task 0 done";
+			}
+		};
 		
 		final Callable<String> task1 = new Callable<String>() {
 			public String call() {
 				System.out.println("t1 is submitted.");
-				return "foo";
+				Future<String> future1 = exec.submit(task0);
+				try {
+					System.out.println(future1.get());
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+				return "task 1 done";
 			}
 		};
 		
 		final Callable<String> task2 = new Callable<String>() {
 			public String call() {
 				System.out.println("t2 is submitted.");
-				//task 2 submits new task task1
+				//task 2 submits 2 new tasks of task1
 				Future<String> future1 = exec.submit(task1);
 				try {
 					System.out.println(future1.get());
-					return "bar";
+					return "task 2 done";
 				}
 
 				catch (InterruptedException e) { return "bar"; }

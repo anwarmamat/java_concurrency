@@ -6,3 +6,4 @@
 **/.merlin
 **/_build/
 *~
+*.class
