@@ -1,6 +1,6 @@
 package comletion;
-/*
- * With  completion servcice, the shortest task 
+/**
+ * With  completion service, the shortest task 
  * will be  printed first. So tasks be printed from 
  * shortest to longest order. 
  * 
@@ -22,11 +22,13 @@ public class CompletionServiceDemo {
 		int nThreads = 10;
 		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 		CompletionService<String> compl = new ExecutorCompletionService<String>(executor);
-		System.out.println("Completion Service");
+		System.out.println("Completion Service:  from the shortest to the longest");
 		for(int i = 1; i <= nThreads; i++) {
 			Task task = new Task();
 			compl.submit(task);
 		}
+		// Tasks printed from the shortest to the longest
+		
 		try {
 			for(int i = 1; i <= nThreads; i++) {
 				Future<String> f = compl.take();
@@ -38,10 +40,9 @@ public class CompletionServiceDemo {
              Thread.currentThread().interrupt();
      	} 
 		
-		// shortest one will be printed first 
 		
-		
-		System.out.println("Executor service");
+		// Tasks printed in the FIFO order	
+		System.out.println("\nExecutor service: FIFO order");
 		
 		Future[] flist = new Future[nThreads];
 		for(int i = 0; i < nThreads; i++) {

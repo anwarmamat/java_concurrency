@@ -10,7 +10,7 @@ public class Task implements Callable<String>{
 		
 		int w = (int)(Math.random() * 1000);
 		TimeUnit.MILLISECONDS.sleep(w);
-		return Thread.currentThread().getName() + "  slept " + w + " milliseconds.";
+		return Thread.currentThread().getName() + "  \t " + w + " milliseconds.";
 	}
 
 	
