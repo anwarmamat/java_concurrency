@@ -21,10 +21,7 @@ import scala.concurrent.duration.Duration;
 public class IntChainsTester {
 
 	static ActorSystem actorSystem = ActorSystem.create("IntChainsSystem");
-	
 	static ActorRef creator = actorSystem.actorOf(ChainManagerActor.props,"manager");
-
-	
 	
 	/**
 	 * Method for implementing Java get()-like behavior for Scala futures
@@ -50,8 +47,7 @@ public class IntChainsTester {
 	static ActorRef makeChain(Integer contents) {
 		
 		NewChainRequestMessage req = new NewChainRequestMessage(contents);
-		
-		
+		System.out.println("asking from " + creator.path().name());
 		Future<Object> fmsg = Patterns.ask(creator, req, 1000);
 		
 		try {
@@ -85,6 +81,7 @@ public class IntChainsTester {
 		Future<Object> fmsg = Patterns.ask(chain, req, 1000);
 		try {
 			SumResultMessage msg = (SumResultMessage) get(fmsg);
+			System.out.println("result:"+msg.getResult());
 			return (msg.getResult());
 		} catch (Exception e) {
 			System.out.println("Error in add()");
@@ -97,30 +94,29 @@ public class IntChainsTester {
 		
 		System.out.println("manager actor " + creator.path().name() + " is created");
 		
-		ActorRef chain = makeChain(0);
-		
-		
-		add(chain, 1);
-		
-		add(chain, 2);
-		add(chain, 3);
-		add(chain, 42);
+		ActorRef chain = makeChain(10);
+		System.out.println("First chain:" + chain.path().name());
+		add(chain, 20);
+		add(chain, 30);
+		add(chain, 40);
+		add(chain, 50);
+		add(chain, 60);
 		System.out.printf("Sum of chain is %d%n", sum(chain));
-
-		Thread test1 = new Thread() {
-			public void run() {
-				System.out.printf("Sum of chain in test1 is %d%n", sum(chain));
-			}
-		};
-
-		Thread test2 = new Thread() {
-			public void run() {
-				System.out.printf("Sum of chain in test2 is %d%n", sum(chain));
-			}
-		};
-
-		test1.start();
-		test2.start();
+//
+//		Thread test1 = new Thread() {
+//			public void run() {
+//				System.out.printf("Sum of chain in test1 is %d%n", sum(chain));
+//			}
+//		};
+//
+//		Thread test2 = new Thread() {
+//			public void run() {
+//				System.out.printf("Sum of chain in test2 is %d%n", sum(chain));
+//			}
+//		};
+//
+//		//test1.start();
+		//test2.start();
 
 		try {
 			Thread.sleep(100);  // Sleep long enough to ensure delivery of
