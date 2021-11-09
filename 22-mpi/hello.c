@@ -16,6 +16,7 @@ int main (int argc, char *argv[])
   printf ("Hello from task %d on %s!\n", rank, hostname);
   if (rank == MASTER)
     printf("MASTER: Number of MPI tasks is: %d\n",numtasks);
-
+  else
+    printf("I am a worker\n");
   MPI_Finalize();
 }

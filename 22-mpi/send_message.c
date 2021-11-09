@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
     printf("size:%d\n", size);
     printf("master id:%d\n", rank);
     strcpy(msg, "Hello");
-    //MPI_Send(msg, 10, MPI_CHAR, 1, 0, MPI_COMM_WORLD);
+    MPI_Send(msg, 10, MPI_CHAR, 1, 0, MPI_COMM_WORLD);
   }else{
     char msg[100];
     MPI_Recv(msg, 10, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
